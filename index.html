@@ -36,27 +36,28 @@
       margin-right: auto;
     }
 
+    .social-links {
+      margin-top: 1rem;
+    }
+
+    .social-links a {
+      margin: 0 0.5rem;
+      color: #d1d5db;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
     main {
       max-width: 900px;
       margin: 3rem auto;
       padding: 0 2rem;
     }
 
-    section {
-      margin-bottom: 3rem;
-    }
-
-    section h2 {
-      font-size: 1.6rem;
-      margin-bottom: 1rem;
-      border-bottom: 2px solid #e5e7eb;
-      padding-bottom: 0.3rem;
-    }
-
     .cards {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1.5rem;
+      margin-bottom: 3rem;
     }
 
     .card {
@@ -101,67 +102,45 @@
 <header>
   <h1>Ashrit Mangalwedhekar</h1>
   <p>
-    I'm a PhD student at the University of Konstanz and Centre of Excellence for Collective.
-    I'm part of the IMPRS QBEE program.
+    I'm a PhD student at the University of Konstanz and Centre of Excellence for Collective Behaviour. 
+    I'm also part of the IMPRS QBEE program.
   </p>
+  <div class="social-links">
+    <a href="https://twitter.com/ashritocyte" target="_blank">Twitter</a> |
+    <a href="https://bsky.app/profile/ashritocyte" target="_blank">Bluesky</a> |
+    <a href="https://www.instagram.com/t_rex.bot/" target="_blank">Instagram</a>
+  </div>
 </header>
 
 <main>
+  <div class="cards">
 
-  <section>
-    <h2>Things I work on</h2>
-    <div class="cards">
-
-      <div class="card">
-        <h3>🧠 Science</h3>
-        <p>
-          Research on behavior, decision-making, control theory,
-          and dynamical systems in biological networks.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>🎥 Science Communication</h3>
-        <p>
-          Animations, visual explanations, and public-facing
-          storytelling for complex scientific ideas.
-        </p>
-      </div>
-
+    <div class="card">
+      <h3>🧠 Science</h3>
+      <p>Decision-making and collective behavior in biological systems.</p>
     </div>
-  </section>
 
-  <section>
-    <h2>Visual & Creative Work</h2>
-    <div class="cards">
-
-      <div class="card">
-        <h3>🦓 Wildlife Photography</h3>
-        <p>
-          Animal behavior, field moments, and quiet observations
-          through a lens.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>📷 Food Photography</h3>
-        <p>
-          Cooking as an aesthetic practice — light, texture,
-          and comfort on a plate.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>🍜 Ramen</h3>
-        <p>
-          An ongoing obsession: broths, noodles, experiments,
-          and notes from the kitchen.
-        </p>
-      </div>
-
+    <div class="card">
+      <h3>🎥 Science Communication</h3>
+      <p>Communicating complex science through visuals and animations.</p>
     </div>
-  </section>
 
+    <div class="card">
+      <h3>🦓 Wildlife Photography</h3>
+      <p>Capturing animal behavior in natural settings.</p>
+    </div>
+
+    <div class="card">
+      <h3>📷 Food Photography</h3>
+      <p>Highlighting food through light, texture, and composition.</p>
+    </div>
+
+    <div class="card">
+      <h3>🍜 Ramen</h3>
+      <p>Experiments with broths, noodles, and flavors.</p>
+    </div>
+
+  </div>
 </main>
 
 <footer>
