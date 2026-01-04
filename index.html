@@ -38,13 +38,29 @@
 
     .social-links {
       margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
     }
 
-    .social-links a {
-      margin: 0 0.5rem;
+    .social-link {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
       color: #d1d5db;
       text-decoration: none;
       font-weight: bold;
+      transition: color 0.2s ease;
+    }
+
+    .social-link:hover {
+      color: #ffffff;
+    }
+
+    .social-link img {
+      width: 20px;
+      height: 20px;
     }
 
     main {
@@ -106,9 +122,18 @@
     I'm also part of the IMPRS QBEE program.
   </p>
   <div class="social-links">
-    <a href="https://twitter.com/ashritocyte" target="_blank">Twitter</a> |
-    <a href="https://bsky.app/profile/ashritocyte" target="_blank">Bluesky</a> |
-    <a href="https://www.instagram.com/t_rex.bot/" target="_blank">Instagram</a>
+    <a class="social-link" href="https://www.linkedin.com/in/ashrit-mangalwedhekar/" target="_blank">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn"> Ashrit Mangalwedhekar
+    </a>
+    <a class="social-link" href="https://www.instagram.com/t_rex.bot/" target="_blank">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram"> t_rex.bot
+    </a>
+    <a class="social-link" href="https://bsky.app/profile/ashritocyte" target="_blank">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/bluesky.svg" alt="Bluesky"> ashritocyte
+    </a>
+    <a class="social-link" href="https://twitter.com/ashritocyte" target="_blank">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitter.svg" alt="Twitter"> ashritocyte
+    </a>
   </div>
 </header>
 
@@ -144,7 +169,7 @@
 </main>
 
 <footer>
-  Built slowly, with care.
+  Ashrit Mangalwedhekar
 </footer>
 
 </body>
