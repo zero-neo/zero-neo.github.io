@@ -47,25 +47,24 @@
     .social-link {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      color: #f0f0eb; /* eggshell / white */
-      text-decoration: none;
-      font-weight: bold;
+      width: 32px;
+      height: 32px;
+      color: #f0f0eb; /* white/eggshell */
       transition: color 0.2s ease;
     }
 
     .social-link img {
-      width: 20px;
-      height: 20px;
+      width: 32px;
+      height: 32px;
       filter: brightness(0) invert(1);
-      transition: filter 0.2s ease;
+      transition: filter 0.2s ease, transform 0.2s ease;
     }
 
-    /* Brand colors on hover */
-    .social-link.linkedin:hover { color: #0A66C2; }
-    .social-link.instagram:hover { color: #E1306C; }
-    .social-link.bluesky:hover { color: #33B2FF; }
-    .social-link.twitter:hover { color: #1DA1F2; }
+    /* Brand color hover filters */
+    .social-link.linkedin:hover img { filter: brightness(0) invert(1) sepia(100%) saturate(1000%) hue-rotate(200deg); }
+    .social-link.instagram:hover img { filter: brightness(0) invert(1) sepia(100%) saturate(600%) hue-rotate(320deg); }
+    .social-link.bluesky:hover img { filter: brightness(0) invert(1) sepia(100%) saturate(600%) hue-rotate(190deg); }
+    .social-link.twitter:hover img { filter: brightness(0) invert(1) sepia(100%) saturate(600%) hue-rotate(190deg); }
 
     main {
       max-width: 1200px;
@@ -74,10 +73,10 @@
     }
 
     .cards {
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1.5rem;
-      overflow-x: auto;
-      padding-bottom: 1rem;
+      margin-bottom: 3rem;
     }
 
     .card {
@@ -85,7 +84,6 @@
       padding: 1.5rem;
       border-radius: 12px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.06);
-      flex: 0 0 220px;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
@@ -127,16 +125,16 @@
   </p>
   <div class="social-links">
     <a class="social-link linkedin" href="https://www.linkedin.com/in/ashrit-mangalwedhekar-56ab65a9/" target="_blank">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn"> Ashrit Mangalwedhekar
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn">
     </a>
     <a class="social-link instagram" href="https://www.instagram.com/t_rex.bot/" target="_blank">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram"> t_rex.bot
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram">
     </a>
     <a class="social-link bluesky" href="https://bsky.app/profile/ashritocyte" target="_blank">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/bluesky.svg" alt="Bluesky"> ashritocyte
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/bluesky.svg" alt="Bluesky">
     </a>
     <a class="social-link twitter" href="https://twitter.com/ashritocyte" target="_blank">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitter.svg" alt="Twitter"> ashritocyte
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitter.svg" alt="Twitter">
     </a>
   </div>
 </header>
@@ -155,18 +153,18 @@
     </div>
 
     <div class="card">
-      <h3>Wildlife Photography</h3>
+      <h3>Wildlife</h3>
       <p>Capturing animal behavior in natural settings.</p>
-    </div>
-
-    <div class="card">
-      <h3>Food</h3>
-      <p>Highlighting food through light, texture, and composition.</p>
     </div>
 
     <div class="card">
       <h3>Ramen</h3>
       <p>Experiments with broths, noodles, and flavors.</p>
+    </div>
+
+    <div class="card">
+      <h3>Food</h3>
+      <p>Highlighting food through light, texture, and composition.</p>
     </div>
 
   </div>
