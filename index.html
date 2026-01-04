@@ -48,33 +48,36 @@
       display: flex;
       align-items: center;
       gap: 0.4rem;
-      color: #f0f0eb; /* eggshell / white-ish */
+      color: #f0f0eb; /* eggshell / white */
       text-decoration: none;
       font-weight: bold;
       transition: color 0.2s ease;
     }
 
-    .social-link:hover {
-      color: #ffffff;
-    }
-
     .social-link img {
       width: 20px;
       height: 20px;
-      filter: brightness(0) invert(1); /* ensures icon appears white */
+      filter: brightness(0) invert(1);
+      transition: filter 0.2s ease;
     }
 
+    /* Brand colors on hover */
+    .social-link.linkedin:hover { color: #0A66C2; }
+    .social-link.instagram:hover { color: #E1306C; }
+    .social-link.bluesky:hover { color: #33B2FF; }
+    .social-link.twitter:hover { color: #1DA1F2; }
+
     main {
-      max-width: 900px;
+      max-width: 1200px;
       margin: 3rem auto;
       padding: 0 2rem;
     }
 
     .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      display: flex;
       gap: 1.5rem;
-      margin-bottom: 3rem;
+      overflow-x: auto;
+      padding-bottom: 1rem;
     }
 
     .card {
@@ -82,6 +85,7 @@
       padding: 1.5rem;
       border-radius: 12px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+      flex: 0 0 220px;
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
@@ -108,7 +112,6 @@
     }
 
     a {
-      color: inherit;
       text-decoration: none;
     }
   </style>
@@ -123,16 +126,16 @@
     I'm also part of the IMPRS QBEE program.
   </p>
   <div class="social-links">
-    <a class="social-link" href="https://www.linkedin.com/in/ashrit-mangalwedhekar-56ab65a9/" target="_blank">
+    <a class="social-link linkedin" href="https://www.linkedin.com/in/ashrit-mangalwedhekar-56ab65a9/" target="_blank">
       <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn"> Ashrit Mangalwedhekar
     </a>
-    <a class="social-link" href="https://www.instagram.com/t_rex.bot/" target="_blank">
+    <a class="social-link instagram" href="https://www.instagram.com/t_rex.bot/" target="_blank">
       <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram"> t_rex.bot
     </a>
-    <a class="social-link" href="https://bsky.app/profile/ashritocyte" target="_blank">
+    <a class="social-link bluesky" href="https://bsky.app/profile/ashritocyte" target="_blank">
       <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/bluesky.svg" alt="Bluesky"> ashritocyte
     </a>
-    <a class="social-link" href="https://twitter.com/ashritocyte" target="_blank">
+    <a class="social-link twitter" href="https://twitter.com/ashritocyte" target="_blank">
       <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitter.svg" alt="Twitter"> ashritocyte
     </a>
   </div>
@@ -157,7 +160,7 @@
     </div>
 
     <div class="card">
-      <h3>Food Photography</h3>
+      <h3>Food</h3>
       <p>Highlighting food through light, texture, and composition.</p>
     </div>
 
