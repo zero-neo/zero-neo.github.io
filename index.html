@@ -45,26 +45,23 @@
     }
 
     .social-link {
-      display: flex;
-      align-items: center;
       width: 32px;
       height: 32px;
-      color: #f0f0eb; /* white/eggshell */
-      transition: color 0.2s ease;
+      transition: transform 0.2s ease;
     }
 
     .social-link img {
       width: 32px;
       height: 32px;
-      filter: brightness(0) invert(1);
-      transition: filter 0.2s ease, transform 0.2s ease;
+      transition: transform 0.2s ease, filter 0.2s ease;
+      filter: brightness(0) invert(1); /* default white logo */
     }
 
-    /* Brand color hover filters */
-    .social-link.linkedin:hover img { filter: none; fill: #0A66C2; }
-    .social-link.instagram:hover img { filter: none; fill: #E1306C; }
-    .social-link.bluesky:hover img { filter: none; fill: #33B2FF; }
-    .social-link.twitter:hover img { filter: none; fill: #1DA1F2; }
+    /* Hover: show brand colors */
+    .social-link.linkedin:hover img { filter: none; }
+    .social-link.instagram:hover img { filter: none; }
+    .social-link.bluesky:hover img { filter: none; }
+    .social-link.twitter:hover img { filter: none; }
 
     main {
       max-width: 1200px;
@@ -125,16 +122,16 @@
   </p>
   <div class="social-links">
     <a class="social-link linkedin" href="https://www.linkedin.com/in/ashrit-mangalwedhekar-56ab65a9/" target="_blank">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg" alt="LinkedIn" style="fill:#0A66C2;">
     </a>
     <a class="social-link instagram" href="https://www.instagram.com/t_rex.bot/" target="_blank">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/instagram.svg" alt="Instagram" style="fill:#E1306C;">
     </a>
     <a class="social-link bluesky" href="https://bsky.app/profile/ashritocyte" target="_blank">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/bluesky.svg" alt="Bluesky">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/bluesky.svg" alt="Bluesky" style="fill:#33B2FF;">
     </a>
     <a class="social-link twitter" href="https://twitter.com/ashritocyte" target="_blank">
-      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitter.svg" alt="Twitter">
+      <img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/twitter.svg" alt="Twitter" style="fill:#1DA1F2;">
     </a>
   </div>
 </header>
