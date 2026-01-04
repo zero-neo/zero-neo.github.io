@@ -1,16 +1,173 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Ashrit</title>
-  </head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Ashrit</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <body>
-    <h1>Hello, I’m Ashrit</h1>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      background: #f7f7f7;
+      color: #222;
+      line-height: 1.6;
+    }
 
-    <p>
-      This is my personal website.
-      I’m building it slowly.
-    </p>
-  </body>
+    header {
+      background: linear-gradient(120deg, #1f2933, #111827);
+      color: white;
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      font-weight: 600;
+    }
+
+    header p {
+      margin-top: 1rem;
+      font-size: 1.1rem;
+      color: #d1d5db;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+
+    section {
+      margin-bottom: 3rem;
+    }
+
+    section h2 {
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 0.3rem;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    }
+
+    .card h3 {
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      margin: 0;
+      color: #555;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Ashrit</h1>
+  <p>
+    PhD researcher interested in decision-making, dynamical systems,
+    and how biological systems compute — with a soft spot for food,
+    images, and storytelling.
+  </p>
+</header>
+
+<main>
+
+  <section>
+    <h2>Things I work on</h2>
+    <div class="cards">
+
+      <div class="card">
+        <h3>🧠 Science</h3>
+        <p>
+          Research on behavior, decision-making, control theory,
+          and dynamical systems in biological networks.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>🎥 Science Communication</h3>
+        <p>
+          Animations, visual explanations, and public-facing
+          storytelling for complex scientific ideas.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <h2>Visual & Creative Work</h2>
+    <div class="cards">
+
+      <div class="card">
+        <h3>🦓 Wildlife Photography</h3>
+        <p>
+          Animal behavior, field moments, and quiet observations
+          through a lens.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>📷 Food Photography</h3>
+        <p>
+          Cooking as an aesthetic practice — light, texture,
+          and comfort on a plate.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>🍜 Ramen</h3>
+        <p>
+          An ongoing obsession: broths, noodles, experiments,
+          and notes from the kitchen.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Built slowly, with care.
+</footer>
+
+</body>
 </html>
