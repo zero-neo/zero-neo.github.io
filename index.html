@@ -16,10 +16,40 @@
     }
 
     header {
+      position: relative;
+      overflow: hidden;
       background: linear-gradient(120deg, #1f2933, #111827);
       color: white;
-      padding: 3rem 2rem;
+      padding: 4.5rem 2rem 2rem;
       text-align: center;
+    }
+
+    /* Fish school sits behind the header content */
+    #school {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .school-caption {
+      margin-top: 2.5rem !important;
+      font-size: 0.85rem !important;
+      color: #9ca3af !important;
+    }
+
+    .school-caption a {
+      color: #d1d5db;
+      text-decoration: underline;
     }
 
     header h1 {
@@ -226,6 +256,8 @@
 <body>
 
 <header>
+  <canvas id="school" aria-hidden="true"></canvas>
+  <div class="header-content">
   <!-- Optional: add a photo here, e.g. <img src="images/ashrit.jpg" alt="Ashrit Mangalwedhekar" class="portrait"> -->
   <h1>Ashrit Mangalwedhekar</h1>
   <p>
@@ -259,6 +291,12 @@
     <a href="#beyond">Beyond research</a>
     <a href="#contact">Contact</a>
   </nav>
+  <p class="school-caption" id="school-caption">
+    These fish follow a zonal schooling model, as in
+    <a href="https://github.com/zero-neo/arrowsmith" target="_blank" rel="noopener">arrowsmith</a>.
+    Move your cursor slowly to attract them, quickly to scatter them.
+  </p>
+  </div>
 </header>
 
 <main>
@@ -405,6 +443,220 @@
 <footer>
   Ashrit Mangalwedhekar
 </footer>
+
+<script>
+/*
+  Fish school in the header.
+  Social rules: zonal model (after Couzin et al. 2002), as in arrowsmith's simulate_zonal.
+    - Repulsion: if any neighbour is within R_REP, move away (takes priority).
+    - Otherwise: align with neighbours within R_ORI and move towards those within R_ATT.
+  Cursor:
+    - Slow or still cursor: gentle attraction for fish within LURE_RADIUS.
+    - Fast cursor: fish within FEAR_RADIUS are startled, flee and speed up;
+      the startle spreads weakly to their neighbours and decays over ~1 s.
+*/
+(() => {
+  const header = document.querySelector('header');
+  const canvas = document.getElementById('school');
+  const ctx = canvas.getContext('2d');
+  const textBlock = document.querySelector('.header-content');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---- Parameters (pixels and seconds) ----
+  const R_REP = 14, R_ORI = 45, R_ATT = 110;
+  const SPEED = 55;            // cruising speed
+  const TURN_RATE = 3.0;       // max turning rate, rad/s
+  const NOISE = 0.35;          // heading noise
+  const LURE_RADIUS = 260, LURE_WEIGHT = 1.4, LURE_MIN_DIST = 30;
+  const SLOW = 250;            // cursor speeds below this attract
+  const FAST = 900;            // cursor speeds above this scare
+  const FEAR_RADIUS = 220, FEAR_TAU = 1.0, FEAR_SPEEDUP = 2.5, CONTAGION = 0.6;
+  const WALL_MARGIN = 40;
+  const FISH_LEN = 10;
+
+  let W = 0, H = 0, fish = [], text = null;
+  const ptr = { x: 0, y: 0, active: false, speed: 0, lastT: 0 };
+
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const gauss = () => Math.sqrt(-2 * Math.log(Math.random() + 1e-12)) * Math.cos(2 * Math.PI * Math.random());
+
+  function spawn() {
+    return { x: rand(0, W), y: rand(0, H), h: rand(-Math.PI, Math.PI), fear: 0, sx: 0, sy: 0 };
+  }
+
+  function measureText() {
+    if (window.innerWidth < 700) { text = null; return; }  // no room to swim around text on narrow screens
+    const hr = header.getBoundingClientRect();
+    const tr = textBlock.getBoundingClientRect();
+    text = { x0: tr.left - hr.left - 20, x1: tr.right - hr.left + 20,
+             y0: tr.top - hr.top - 10, y1: tr.bottom - hr.top - 40 };
+  }
+
+  function resize() {
+    const r = header.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width; H = r.height;
+    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const n = Math.round(Math.min(160, Math.max(40, (W * H) / 7000)));
+    while (fish.length < n) fish.push(spawn());
+    fish.length = n;
+    for (const f of fish) { f.x = Math.min(f.x, W); f.y = Math.min(f.y, H); }
+    measureText();
+  }
+
+  function scare(x, y) {
+    for (const f of fish) {
+      const d = Math.hypot(f.x - x, f.y - y);
+      if (d < FEAR_RADIUS) {
+        f.fear = Math.max(f.fear, 1 - 0.5 * d / FEAR_RADIUS);
+        f.sx = x; f.sy = y;
+      }
+    }
+  }
+
+  function step(dt) {
+    ptr.speed *= Math.exp(-dt / 0.15);   // cursor speed decays when no movement events arrive
+
+    for (const f of fish) {
+      let rx = 0, ry = 0, nRep = 0;
+      let ox = Math.cos(f.h), oy = Math.sin(f.h);  // own heading counts towards orientation
+      let ax = 0, ay = 0, nSoc = 0, neighbourFear = 0;
+
+      for (const g of fish) {
+        if (g === f) continue;
+        const dx = g.x - f.x, dy = g.y - f.y;
+        const d = Math.hypot(dx, dy);
+        if (d === 0 || d > R_ATT) continue;
+        if (d < R_REP) { rx -= dx / d; ry -= dy / d; nRep++; }
+        else if (d < R_ORI) { ox += Math.cos(g.h); oy += Math.sin(g.h); nSoc++; neighbourFear = Math.max(neighbourFear, g.fear); }
+        else { ax += dx / d; ay += dy / d; nSoc++; }
+      }
+
+      // Social direction (repulsion has priority)
+      let vx, vy;
+      if (nRep > 0) { vx = rx; vy = ry; }
+      else if (nSoc > 0) { vx = ox + ax; vy = oy + ay; }
+      else { vx = Math.cos(f.h); vy = Math.sin(f.h); }
+      let m = Math.hypot(vx, vy) || 1; vx /= m; vy /= m;
+
+      // Startle spreads weakly through the school
+      if (neighbourFear * CONTAGION > f.fear) f.fear += (neighbourFear * CONTAGION - f.fear) * Math.min(1, 4 * dt);
+
+      // Cursor: attraction when slow, fleeing when startled
+      if (ptr.active && ptr.speed < SLOW) {
+        const dx = ptr.x - f.x, dy = ptr.y - f.y, d = Math.hypot(dx, dy);
+        if (d > LURE_MIN_DIST && d < LURE_RADIUS) {
+          const w = LURE_WEIGHT * (1 - d / LURE_RADIUS);
+          vx += w * dx / d; vy += w * dy / d;
+        }
+      }
+      if (f.fear > 0.05 && (f.sx || f.sy)) {
+        const dx = f.x - f.sx, dy = f.y - f.sy, d = Math.hypot(dx, dy) || 1;
+        vx += 3 * f.fear * dx / d; vy += 3 * f.fear * dy / d;
+      }
+
+      // Mild avoidance of the text block, to keep the name readable
+      if (text && f.x > text.x0 && f.x < text.x1 && f.y > text.y0 && f.y < text.y1) {
+        const cx = (text.x0 + text.x1) / 2, cy = (text.y0 + text.y1) / 2;
+        const dx = f.x - cx, dy = f.y - cy, d = Math.hypot(dx, dy) || 1;
+        vx += 0.5 * dx / d; vy += 0.5 * dy / d;
+      }
+
+      // Soft walls
+      if (f.x < WALL_MARGIN) vx += (WALL_MARGIN - f.x) / WALL_MARGIN * 2;
+      if (f.x > W - WALL_MARGIN) vx -= (f.x - (W - WALL_MARGIN)) / WALL_MARGIN * 2;
+      if (f.y < WALL_MARGIN) vy += (WALL_MARGIN - f.y) / WALL_MARGIN * 2;
+      if (f.y > H - WALL_MARGIN) vy -= (f.y - (H - WALL_MARGIN)) / WALL_MARGIN * 2;
+
+      // Turn towards the desired direction at a limited rate, with noise
+      const target = Math.atan2(vy, vx);
+      let diff = target - f.h;
+      diff = Math.atan2(Math.sin(diff), Math.cos(diff));
+      const maxTurn = TURN_RATE * (1 + 2 * f.fear) * dt;
+      f.h += Math.max(-maxTurn, Math.min(maxTurn, diff)) + NOISE * Math.sqrt(dt) * gauss();
+
+      const speed = SPEED * (1 + FEAR_SPEEDUP * f.fear);
+      f.x += Math.cos(f.h) * speed * dt;
+      f.y += Math.sin(f.h) * speed * dt;
+      f.x = Math.max(0, Math.min(W, f.x));
+      f.y = Math.max(0, Math.min(H, f.y));
+      f.fear *= Math.exp(-dt / FEAR_TAU);
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    for (const f of fish) {
+      const inText = text && f.x > text.x0 && f.x < text.x1 && f.y > text.y0 && f.y < text.y1;
+      ctx.fillStyle = `rgba(226, 232, 240, ${inText ? 0.18 : 0.45})`;
+      ctx.save();
+      ctx.translate(f.x, f.y);
+      ctx.rotate(f.h);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, FISH_LEN / 2, FISH_LEN / 6, 0, 0, 2 * Math.PI);   // body
+      ctx.moveTo(-FISH_LEN / 2 + 1, 0);                                    // tail
+      ctx.lineTo(-FISH_LEN / 2 - 4, -FISH_LEN / 5);
+      ctx.lineTo(-FISH_LEN / 2 - 4, FISH_LEN / 5);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  // ---- Pointer input (mouse and touch) ----
+  function localPos(e) {
+    const r = header.getBoundingClientRect();
+    return [e.clientX - r.left, e.clientY - r.top];
+  }
+
+  header.addEventListener('pointermove', e => {
+    const [x, y] = localPos(e);
+    const now = performance.now();
+    if (ptr.active && ptr.lastT) {
+      const dt = (now - ptr.lastT) / 1000;
+      if (dt > 0) ptr.speed = 0.7 * ptr.speed + 0.3 * Math.hypot(x - ptr.x, y - ptr.y) / dt;
+    }
+    ptr.x = x; ptr.y = y; ptr.lastT = now; ptr.active = true;
+    if (ptr.speed > FAST) scare(x, y);
+  });
+  header.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'touch') { const [x, y] = localPos(e); scare(x, y); }
+  });
+  const release = () => { ptr.active = false; ptr.speed = 0; ptr.lastT = 0; };
+  header.addEventListener('pointerleave', release);
+  header.addEventListener('pointercancel', release);
+  header.addEventListener('pointerup', e => { if (e.pointerType === 'touch') release(); });
+
+  // ---- Run ----
+  resize();
+  let resizeTimer;
+  window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(resize, 150); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measureText);
+
+  if (reduceMotion) {
+    // Static school: let it settle off-screen, draw one frame, no animation
+    for (let i = 0; i < 400; i++) step(1 / 30);
+    draw();
+    document.getElementById('school-caption').innerHTML =
+      'These fish follow a zonal schooling model, as in <a href="https://github.com/zero-neo/arrowsmith" target="_blank" rel="noopener">arrowsmith</a>.';
+    return;
+  }
+
+  for (let i = 0; i < 150; i++) step(1 / 30);   // start already schooling
+
+  let visible = true, last = performance.now();
+  new IntersectionObserver(entries => { visible = entries[0].isIntersecting; }).observe(header);
+
+  function frame(now) {
+    const dt = Math.max(0, Math.min(0.05, (now - last) / 1000));  // first rAF timestamp can precede `last`
+    last = now;
+    if (visible) { step(dt); draw(); }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
 
 </body>
 </html>
