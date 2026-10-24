@@ -162,7 +162,16 @@
     }
 
     .cards.wide {
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(260px, 340px));
+    }
+
+    .cards.wide .card {
+      padding: 1.25rem;
+      font-size: 0.95rem;
+    }
+
+    .cards.wide .card h3 {
+      font-size: 1.1rem;
     }
 
     .card {
@@ -188,8 +197,12 @@
       color: #555;
     }
 
-    .card img.figure {
+    .card .figure {
+      display: block;
+      background: white;
       width: 100%;
+      max-height: 200px;
+      object-fit: contain;
       border-radius: 8px;
       margin-bottom: 1rem;
     }
@@ -287,14 +300,14 @@
   <nav>
     <a href="#about">About</a>
     <a href="#projects">Projects</a>
+    <a href="#toolkit">Toolkit</a>
     <a href="#publications">Publications</a>
     <a href="#beyond">Beyond research</a>
     <a href="#contact">Contact</a>
   </nav>
   <p class="school-caption" id="school-caption">
-    These fish follow a zonal schooling model, as in
-    <a href="https://github.com/zero-neo/arrowsmith" target="_blank" rel="noopener">arrowsmith</a>.
-    Move your cursor slowly to attract them, quickly to scatter them.
+    Inspired by the <a href="https://doi.org/10.1006/jtbi.2002.3065" target="_blank" rel="noopener">Couzin model (2002)</a>.
+    Move your cursor slowly to attract the fish, quickly to scatter them.
   </p>
   </div>
 </header>
@@ -325,21 +338,39 @@
       </p>
       <!-- Add once ready: <p><a href="cv.pdf">Download CV</a></p> -->
     </div>
-
-    <h2 style="margin-top: 2.5rem;">Expertise</h2>
-    <ul class="tags">
-      <li>Bayesian and hierarchical modelling</li>
-      <li>Behavioural time-series analysis</li>
-      <li>Dynamical-systems models</li>
-      <li>Python scientific stack</li>
-      <li>Closed-loop virtual reality experiments</li>
-      <li>Collective behaviour</li>
-    </ul>
   </section>
 
   <section id="projects">
     <h2>Projects</h2>
     <div class="cards wide">
+
+      <div class="card">
+        <video class="figure" src="videos/deterministic_model.mp4" autoplay muted loop playsinline preload="metadata"
+               aria-label="Animation of the multiple-integrator model turning a stimulus sequence into a behavioural output"></video>
+        <h3>Sensory and response history in larval zebrafish</h3>
+        <p>
+          Zebrafish turn towards whole-field visual motion, but not the same way every time. I showed that
+          recent stimuli and recent choices push behaviour in opposite directions, with effects lasting tens
+          of minutes, and built a multiple-integrator model across three timescales that predicts a
+          considerable fraction of trial-to-trial variability from history alone.
+        </p>
+        <div class="links">
+          <a href="https://doi.org/10.64898/2026.07.30.741669" target="_blank" rel="noopener">Preprint</a>
+          <a href="https://doi.org/10.48606/h5v2506p48g298zv" target="_blank" rel="noopener">Code and data (live on publication)</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <video class="figure" src="videos/fishtime.mp4" autoplay muted loop playsinline preload="metadata"
+               aria-label="Video of fish interacting through virtual coupling"></video>
+        <h3>Dissecting interactions in fish groups using virtual coupling</h3>
+        <p>
+          With virtual coupling, fish swim in separate arenas and interact with virtual counterparts driven
+          in real time by the others' movements. Because every interaction passes through software, its
+          structure can be designed and manipulated. I extended the FishTime closed-loop system to run this
+          paradigm at 90 Hz and validated it against shuffled controls. Paper in preparation.
+        </p>
+      </div>
 
       <div class="card">
         <img class="figure" src="images/velocity_map.png"
@@ -355,22 +386,19 @@
         </div>
       </div>
 
-      <div class="card">
-        <!-- Optional: add a key figure from the paper, e.g. <img class="figure" src="images/history.png" alt="..."> -->
-        <h3>Sensory and response history in larval zebrafish</h3>
-        <p>
-          Zebrafish turn towards whole-field visual motion, but not the same way every time. I showed that
-          recent stimuli and recent choices push behaviour in opposite directions, with effects lasting tens
-          of minutes, and built a multiple-integrator model across three timescales that predicts a
-          considerable fraction of trial-to-trial variability from history alone.
-        </p>
-        <div class="links">
-          <a href="https://doi.org/10.64898/2026.07.30.741669" target="_blank" rel="noopener">Preprint</a>
-          <a href="https://doi.org/10.48606/h5v2506p48g298zv" target="_blank" rel="noopener">Code and data (live on publication)</a>
-        </div>
-      </div>
-
     </div>
+  </section>
+
+  <section id="toolkit">
+    <h2>Toolkit</h2>
+    <ul class="tags">
+      <li>Python scientific stack</li>
+      <li>Behavioural time-series analysis</li>
+      <li>Bayesian and hierarchical modelling</li>
+      <li>Dynamical-systems models</li>
+      <li>Closed-loop virtual reality systems</li>
+      <li>Collective behaviour</li>
+    </ul>
   </section>
 
   <section id="publications">
@@ -498,7 +526,7 @@
     W = r.width; H = r.height;
     canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const n = Math.round(Math.min(160, Math.max(40, (W * H) / 7000)));
+    const n = Math.round(Math.min(80, Math.max(20, (W * H) / 14000)));
     while (fish.length < n) fish.push(spawn());
     fish.length = n;
     for (const f of fish) { f.x = Math.min(f.x, W); f.y = Math.min(f.y, H); }
@@ -635,11 +663,12 @@
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(measureText);
 
   if (reduceMotion) {
+    document.querySelectorAll('video[autoplay]').forEach(v => { v.removeAttribute('autoplay'); v.pause(); v.controls = true; });
     // Static school: let it settle off-screen, draw one frame, no animation
     for (let i = 0; i < 400; i++) step(1 / 30);
     draw();
     document.getElementById('school-caption').innerHTML =
-      'These fish follow a zonal schooling model, as in <a href="https://github.com/zero-neo/arrowsmith" target="_blank" rel="noopener">arrowsmith</a>.';
+      'Inspired by the <a href="https://doi.org/10.1006/jtbi.2002.3065" target="_blank" rel="noopener">Couzin model (2002)</a>.';
     return;
   }
 
