@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Ashrit Mangalwedhekar</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Ashrit Mangalwedhekar, computational neuroscientist. Models of behaviour from experimental data.">
+  <meta name="description" content="Ashrit Mangalwedhekar, data scientist with a PhD in computational neuroscience.">
 
   <style>
     body {
@@ -50,6 +50,17 @@
     .school-caption a {
       color: #d1d5db;
       text-decoration: underline;
+    }
+
+    .portrait {
+      display: block;
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 1.25rem;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
     }
 
     header h1 {
@@ -161,6 +172,10 @@
       margin-bottom: 3rem;
     }
 
+    .cards.wide + .project-tags {
+      margin-top: -1.5rem;
+    }
+
     .cards.wide {
       grid-template-columns: repeat(auto-fill, minmax(260px, 340px));
     }
@@ -205,6 +220,39 @@
       object-fit: contain;
       border-radius: 8px;
       margin-bottom: 1rem;
+    }
+
+    .card .figure {
+      cursor: zoom-in;
+    }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(17, 24, 39, 0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      cursor: zoom-out;
+    }
+
+    .lightbox[hidden] {
+      display: none;
+    }
+
+    .lightbox img,
+    .lightbox video {
+      max-width: min(1400px, 100%);
+      max-height: 90vh;
+      background: white;
+      border-radius: 8px;
+    }
+
+    .lightbox video {
+      width: min(1400px, 100%);
+      height: auto;
     }
 
     .card .links {
@@ -271,11 +319,10 @@
 <header>
   <canvas id="school" aria-hidden="true"></canvas>
   <div class="header-content">
-  <!-- Optional: add a photo here, e.g. <img src="images/ashrit.jpg" alt="Ashrit Mangalwedhekar" class="portrait"> -->
+  <img src="images/ashrit.jpg" alt="Ashrit Mangalwedhekar" class="portrait">
   <h1>Ashrit Mangalwedhekar</h1>
   <p>
-    Data scientist with a PhD in Computational Neuroscience. Dabbling in mechanisms of sensorimotor transformations and collective behaviour.
-    I love making sense of noisy, hierarchical data and making and breaking predictive models.
+    Data scientist with a PhD in computational neuroscience. I build, test and break predictive models of noisy data.
   </p>
   <div class="social-links">
     <a class="social-link" href="https://github.com/zero-neo" target="_blank" rel="noopener" aria-label="GitHub">
@@ -300,14 +347,13 @@
   <nav>
     <a href="#about">About</a>
     <a href="#projects">Projects</a>
-    <a href="#toolkit">Toolkit</a>
     <a href="#publications">Publications</a>
     <a href="#beyond">Beyond research</a>
     <a href="#contact">Contact</a>
   </nav>
   <p class="school-caption" id="school-caption">
-    Inspired by the <a href="https://doi.org/10.1006/jtbi.2002.3065" target="_blank" rel="noopener">Couzin model (2002)</a>.
-    Move your cursor slowly to attract the fish, quickly to scatter them.
+    Move slowly and they'll come to you. Move fast and watch them bolt.
+    Schooling rules from the <a href="https://doi.org/10.1006/jtbi.2002.3065" target="_blank" rel="noopener">Couzin model (2002)</a>.
   </p>
   </div>
 </header>
@@ -318,23 +364,13 @@
     <h2>About</h2>
     <div class="prose">
       <p>
-        If you have spent time watching animals, you might have noticed that their behaviour is quite variable.
-        Even in highly controlled lab environments, an individual may respond differently to identical stimuli.
-        In my PhD I studied how this variability is shaped by history: how past sensory and motor experiences
-        accumulate and influence present choices across multiple timescales. Combining behavioural experiments
-        in larval zebrafish with computational models, I look for the minimal rules and feedback mechanisms
-        that explain these dynamics.
+        I find insight in noisy data, and I'm equally drawn to the noise itself: its sources, and its consequences.
       </p>
       <p>
-        I am also fascinated by collective movement, such as murmurations of birds and schools of fish. To study
-        how local interactions scale up to group-level patterns, I use a virtual coupling framework that links
-        real animals with simulated counterparts, so the structure of the interaction itself can be designed and
-        manipulated.
-      </p>
-      <p>
-        Before Konstanz, I did a master's in biomedical engineering at IIT Ropar, with thesis work in the
-        Theoretical Ecology and Evolution Lab at the Indian Institute of Science, and a bachelor's in
-        biotechnology at PES University, Bengaluru.
+        My PhD at the University of Konstanz tracked down a source. In larval zebrafish, a considerable
+        fraction of what looks like random trial-to-trial variability turned out to be structured by the
+        animal's recent sensory and motor history. My master's thesis, at the Indian Institute of Science,
+        explored a consequence: noise can itself drive small groups of fish to school.
       </p>
       <!-- Add once ready: <p><a href="cv.pdf">Download CV</a></p> -->
     </div>
@@ -345,30 +381,28 @@
     <div class="cards wide">
 
       <div class="card">
-        <video class="figure" src="videos/deterministic_model.mp4" autoplay muted loop playsinline preload="metadata"
-               aria-label="Animation of the multiple-integrator model turning a stimulus sequence into a behavioural output"></video>
+        <img class="figure" src="images/opposing_influences_summary.png"
+             alt="Summary of the opposing influences of sensory and response history on larval zebrafish behaviour">
         <h3>Sensory and response history in larval zebrafish</h3>
         <p>
-          Zebrafish turn towards whole-field visual motion, but not the same way every time. I showed that
-          recent stimuli and recent choices push behaviour in opposite directions, with effects lasting tens
-          of minutes, and built a multiple-integrator model across three timescales that predicts a
-          considerable fraction of trial-to-trial variability from history alone.
+          Larval zebrafish turn to follow moving patterns. But not always. Their recent past exerts two
+          opposing influences: what they've just seen pushes their next turn away, while what they've just
+          done pulls them to repeat it. A model with three timescales of memory predicts a considerable
+          fraction of choices that look random.
         </p>
         <div class="links">
           <a href="https://doi.org/10.64898/2026.07.30.741669" target="_blank" rel="noopener">Preprint</a>
-          <a href="https://doi.org/10.48606/h5v2506p48g298zv" target="_blank" rel="noopener">Code and data (live on publication)</a>
         </div>
       </div>
 
       <div class="card">
         <video class="figure" src="videos/fishtime.mp4" autoplay muted loop playsinline preload="metadata"
                aria-label="Video of fish interacting through virtual coupling"></video>
-        <h3>Dissecting interactions in fish groups using virtual coupling</h3>
+        <h3>Rewiring fish schools</h3>
         <p>
-          With virtual coupling, fish swim in separate arenas and interact with virtual counterparts driven
-          in real time by the others' movements. Because every interaction passes through software, its
-          structure can be designed and manipulated. I extended the FishTime closed-loop system to run this
-          paradigm at 90 Hz and validated it against shuffled controls. Paper in preparation.
+          What if fish could only meet each other through a screen? With virtual coupling, each fish swims
+          alone and interacts with virtual counterparts that move as the others do, in real time. Every
+          interaction passes through software, so I can redesign who influences whom, and how. Paper in preparation.
         </p>
       </div>
 
@@ -377,27 +411,22 @@
              alt="Vector field showing how a neighbour moves depending on its position relative to a focal fish">
         <h3>arrowsmith</h3>
         <p>
-          An open-source Python package that turns tracked trajectories of interacting animals into maps of
-          how each individual moves relative to the others. It includes a simulator with known interaction
-          rules, so the maps can be checked against a ground truth. Equation recovery is in progress.
+          Where does a fish go when its neighbour is just ahead? arrowsmith turns tracking data into maps that
+          answer that question for any pair of animals, with a built-in simulator to check the maps against
+          known rules. Next up: recovering candidate equations for these vector fields.
         </p>
         <div class="links">
-          <a href="https://github.com/zero-neo/arrowsmith" target="_blank" rel="noopener">Code on GitHub</a>
+          <a href="https://github.com/zero-neo/arrowsmith" target="_blank" rel="noopener">GitHub</a>
         </div>
       </div>
 
     </div>
-  </section>
-
-  <section id="toolkit">
-    <h2>Toolkit</h2>
-    <ul class="tags">
+    <ul class="tags project-tags" aria-label="Methods and tools">
       <li>Python scientific stack</li>
       <li>Behavioural time-series analysis</li>
       <li>Bayesian and hierarchical modelling</li>
       <li>Dynamical-systems models</li>
       <li>Closed-loop virtual reality systems</li>
-      <li>Collective behaviour</li>
     </ul>
   </section>
 
@@ -417,7 +446,7 @@
         <span class="meta">Shabani F., <strong>Mangalwedhekar A.</strong>, Bahl A. (2026). Preprint.</span>
       </li>
       <li>
-        <span class="title">Hysteresis in the sensorimotor processing of larval zebrafish</span>
+        <span class="title">Hysteresis in the Sensorimotor Processing of Larval Zebrafish</span>
         <span class="meta">PhD thesis, University of Konstanz (2026).</span>
       </li>
     </ul>
@@ -428,28 +457,23 @@
     <div class="cards">
 
       <div class="card">
-        <h3>Science communication</h3>
-        <p>An attempt to visualise and communicate science.</p>
-      </div>
-
-      <div class="card">
-        <h3>Wildlife</h3>
-        <p>Capturing animal behaviour in natural settings.</p>
+        <h3>Science outside the lab</h3>
+        <p>Wildlife photography and science communication: watching animals behave where nobody controls the stimuli.</p>
       </div>
 
       <div class="card">
         <h3>Ramen</h3>
-        <p>Experiments with broths, noodles and flavours, well past the point of diminishing returns.</p>
+        <p>Boiling broths, kneading noodles and fiddling with flavours.</p>
       </div>
 
       <div class="card">
         <h3>Chess</h3>
-        <p>Thinking deeply about decision-making, then blundering anyway.</p>
+        <p>Proof you don't need randomness to get chaos.</p>
       </div>
 
       <div class="card">
-        <h3>Travel and food</h3>
-        <p>Highlighting travel and food experiences.</p>
+        <h3>Travel &amp; food</h3>
+        <p>Eating my way through new places, and taking notes for the next ramen experiment.</p>
       </div>
 
     </div>
@@ -459,8 +483,8 @@
     <h2>Contact</h2>
     <div class="prose">
       <p>
-        I am open to roles in data science, computational modelling and neurotechnology.
-        The best way to reach me is by email at
+        I'm open to roles in data science, computational modelling and neurotechnology.
+        The best way to reach me is email:
         <a href="mailto:ashrit.mangalwedhekar@gmail.com">ashrit.mangalwedhekar@gmail.com</a>.
       </p>
     </div>
@@ -471,6 +495,32 @@
 <footer>
   Ashrit Mangalwedhekar
 </footer>
+
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Enlarged figure"></div>
+
+<script>
+// Click a project figure (image or video) to see it large; click anywhere or press Esc to close.
+(() => {
+  const box = document.getElementById('lightbox');
+  const close = () => { box.hidden = true; box.innerHTML = ''; };
+  document.querySelectorAll('.card .figure').forEach(el => {
+    el.setAttribute('tabindex', '0');
+    const open = () => {
+      const big = el.cloneNode(true);
+      big.removeAttribute('class');
+      big.removeAttribute('tabindex');
+      if (big.tagName === 'VIDEO') { big.muted = true; big.loop = true; big.playsInline = true; big.play(); }
+      box.innerHTML = '';
+      box.appendChild(big);
+      box.hidden = false;
+    };
+    el.addEventListener('click', open);
+    el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
+  });
+  box.addEventListener('click', close);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !box.hidden) close(); });
+})();
+</script>
 
 <script>
 /*
@@ -668,7 +718,7 @@
     for (let i = 0; i < 400; i++) step(1 / 30);
     draw();
     document.getElementById('school-caption').innerHTML =
-      'Inspired by the <a href="https://doi.org/10.1006/jtbi.2002.3065" target="_blank" rel="noopener">Couzin model (2002)</a>.';
+      'Schooling rules from the <a href="https://doi.org/10.1006/jtbi.2002.3065" target="_blank" rel="noopener">Couzin model (2002)</a>.';
     return;
   }
 
